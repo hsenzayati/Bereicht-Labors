@@ -207,7 +207,8 @@ merke("MkennYmittel", float(np.mean(np.interp(np.arange(200, 1001, 10), n_k, M23
 
 def anlaufplot(key, xmax):
     d = anl[key]
-    fig, axs = plt.subplots(4, 1, figsize=(6.2, 6.6), sharex=True)
+    fig, axs = plt.subplots(2, 2, figsize=(7.2, 4.6), sharex=True)
+    axs = axs.ravel()
     axs[0].plot(d["t"], d["n"], color=C[0])
     axs[0].set_ylabel("Drehzahl [1/min]")
     axs[1].plot(d["t"], d["I"], color=C[1])
@@ -218,13 +219,15 @@ def anlaufplot(key, xmax):
     axs[2].set_ylim(lo, d["U0"] + 4)
     axs[3].plot(d["t"], d["P"] / 1000, color=C[3], label="Wirkleistung [kW]")
     axs[3].plot(d["t"], d["Q"] / 1000, color=C[4], label="Blindleistung [kvar]")
-    axs[3].set_ylabel("Leistung"); axs[3].legend(loc="upper right")
-    axs[3].set_xlabel("Zeit [s]")
+    axs[3].set_ylabel("Leistung"); axs[3].legend(loc="upper right", fontsize=7.5)
+    for ax in axs[2:]:
+        ax.set_xlabel("Zeit [s]")
     for ax in axs:
         komma(ax)
         if "t_um" in d:
             ax.axvspan(d["t_um"], d["t_um"] + d["pause"], color="0.85", zorder=0)
     axs[0].set_xlim(-0.1, xmax)
+    fig.tight_layout(h_pad=0.8, w_pad=1.5)
     speichern(fig, f"a_{key}")
 
 

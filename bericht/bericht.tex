@@ -19,6 +19,8 @@
 \usepackage{booktabs,tabularx,array,multirow}
 \usepackage{float}
 \usepackage{longtable}
+\usepackage[section]{placeins}
+\renewcommand{\topfraction}{0.9}\renewcommand{\textfraction}{0.1}\renewcommand{\floatpagefraction}{0.8}
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf}
 \usepackage{fancyhdr}
@@ -76,9 +78,8 @@ Abgabedatum: & \hrulefill & & \\
 \vfill
 \end{titlepage}
 
-\setcounter{tocdepth}{1}
 \tableofcontents
-\vspace{1em}
+\newpage
 
 % =====================================================================
 \section{Einleitung und Ziel des Versuchs}
@@ -231,9 +232,9 @@ Grundlage ist die Drehmoment-Drehzahl-Kennlinie des Herstellers bei \SI{400}{V}
 Sternbetrieb wird das Moment nach Gl.~\eqref{eq:stern} auf ein Drittel umgerechnet
 (Abb.~\ref{fig:kennlinie}).
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\textwidth]{v_kennlinie}
+\includegraphics[width=0.82\textwidth]{v_kennlinie}
 \caption{Motormoment über der Drehzahl im Dreieck (\SI{400}{V}) und im Stern
 (\SI{230}{V} am Strang) sowie das Lastmoment durch Lagerreibung}
 \label{fig:kennlinie}
@@ -270,9 +271,9 @@ $n$-Intervall & $M_\Delta$ & $M_Y$ & $\Delta t_\Delta$ & $t_\Delta$ & $\Delta t_
 \end{longtable}
 }
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\textwidth]{v_hochlauf}
+\includegraphics[width=0.82\textwidth]{v_hochlauf}
 \caption{Berechneter Hochlauf (nicht normiert) für Dreieck- und Sternbetrieb}
 \label{fig:hochlauf}
 \end{figure}
@@ -303,9 +304,9 @@ Blindleistung. In allen Diagrammen ist $t=0$ der Einschaltzeitpunkt. Die grau
 hinterlegten Bereiche markieren die stromlose Umschaltpause von Stern auf Dreieck.
 
 \subsection{Direkter Dreieckanlauf}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.62\textwidth]{a_direkt}
+\includegraphics[width=0.92\textwidth]{a_direkt}
 \caption{Direkter Dreieckanlauf: Drehzahl, Strom, Spannung und Leistungen}
 \label{fig:direkt}
 \end{figure}
@@ -320,9 +321,9 @@ Nach \SI{\Wdirekttneunacht}{s} sind \SI{98}{\percent} der Enddrehzahl
 (\SI{\Wdirektnend}{\per\minute}) erreicht.
 
 \subsection{Stern-Dreieck-Anlauf, zu früh umgeschaltet}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.62\textwidth]{a_frueh}
+\includegraphics[width=0.92\textwidth]{a_frueh}
 \caption{Stern-Dreieck-Anlauf mit zu früher Umschaltung}
 \label{fig:frueh}
 \end{figure}
@@ -339,9 +340,9 @@ nach insgesamt \SI{\Wfruehtneunacht}{s} die Enddrehzahl erreicht. Der Vorteil de
 Stern-Dreieck-Anlaufs geht durch das zu frühe Umschalten weitgehend verloren.
 
 \subsection{Stern-Dreieck-Anlauf, richtig umgeschaltet}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.62\textwidth]{a_richtig}
+\includegraphics[width=0.92\textwidth]{a_richtig}
 \caption{Stern-Dreieck-Anlauf mit Umschaltung zum berechneten Zeitpunkt}
 \label{fig:richtig}
 \end{figure}
@@ -355,9 +356,9 @@ Die Spitze entsteht vor allem durch das Wiederzuschalten auf die noch magnetisie
 Maschine (Ausgleichsvorgang) und nicht durch einen erneuten Hochlauf.
 
 \subsection{Stern-Dreieck-Anlauf, falsch verdrahtet}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.62\textwidth]{a_falsch}
+\includegraphics[width=0.92\textwidth]{a_falsch}
 \caption{Stern-Dreieck-Anlauf mit falsch verdrahteter Dreieckschaltung}
 \label{fig:falsch}
 \end{figure}
@@ -380,15 +381,15 @@ größer, daher entstehen ein größerer Ausgleichsstrom und ein kurzes Bremsmom
 (Drehzahleinbruch).
 
 \subsection{Vergleich der Anlaufverfahren}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\textwidth]{a_vergleich_n}
+\includegraphics[width=0.82\textwidth]{a_vergleich_n}
 \caption{Gemessene Drehzahlverläufe im Vergleich mit der Rechnung aus der Vorbereitung}
 \label{fig:vergl_n}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.7\textwidth]{a_vergleich_I}
+\includegraphics[width=0.78\textwidth]{a_vergleich_I}
 \caption{Stromverläufe der Anlaufverfahren im Vergleich}
 \label{fig:vergl_I}
 \end{figure}
@@ -486,7 +487,7 @@ Beschleunigungsmoment berechnet:
 Da das Drehzahlsignal verrauscht ist, wurde es vor dem Ableiten mit einem
 Savitzky-Golay-Filter (15 Werte $\hat=$ \SI{150}{ms}, Polynomgrad 2) geglättet.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{a_moment}
 \caption{Beschleunigungsmoment aus der gemessenen Drehzahländerung, links über der Zeit,
@@ -524,9 +525,9 @@ $M_\mathrm{Br} = -J_\mathrm{Alu}\cdot2\pi\,\mathrm dn/\mathrm dt$
 (Läuferträgheit vernachlässigt).
 
 \subsection{Drehzahlverläufe im Überblick}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.72\textwidth]{b_vergleich_n}
+\includegraphics[width=0.82\textwidth]{b_vergleich_n}
 \caption{Drehzahlverläufe aller Bremsverfahren}
 \label{fig:b_n}
 \end{figure}
@@ -549,9 +550,9 @@ Verfahren & $t_\mathrm B$ & $\bar a$ & $\bar M$ & $M_\mathrm{max}$ & $U_\mathrm{
 \end{table}
 
 \subsection{Federkraftbremse}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.65\textwidth]{b_feder}
+\includegraphics[width=0.75\textwidth]{b_feder}
 \caption{Federkraftbremse (zwei Messungen)}
 \label{fig:feder}
 \end{figure}
@@ -565,9 +566,9 @@ steht nach \SI{\WfedertB}{s}. Die Wiederholungsmessung bestätigt das Ergebnis
 die abklingende Restspannung des Läufers.
 
 \subsection{Gleichstrombremsung (DC-Bremse)}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.68\textwidth]{b_dc}
+\includegraphics[width=0.72\textwidth]{b_dc}
 \caption{Gleichstrombremsung mit drei verschiedenen Bremsströmen}
 \label{fig:dc}
 \end{figure}
@@ -604,9 +605,9 @@ Energie und zusätzlich die Stromwärme $I_\mathrm{DC}^2R$ werden \emph{im Motor
 Die Zwischenkreisspannung bleibt unverändert bei ca.\ \SI{580}{V}.
 
 \subsection{Generatorisches Bremsen ohne Bremswiderstand}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.68\textwidth]{b_gen0}
+\includegraphics[width=0.72\textwidth]{b_gen0}
 \caption{Generatorisches Bremsen ohne Bremswiderstand: Drehzahl,
 Zwischenkreisspannung und Motorstrom}
 \label{fig:gen0}
@@ -621,9 +622,9 @@ Bremsimpuls. Der Drehzahlverlauf ist daher stufenförmig, und die Bremszeit verl
 sich auf \SI{\WgenohnetB}{s} (mittleres Bremsmoment nur \SI{\WgenohneMmit}{Nm}).
 
 \subsection{Generatorisches Bremsen mit Bremswiderstand}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.68\textwidth]{b_gen}
+\includegraphics[width=0.72\textwidth]{b_gen}
 \caption{Generatorisches Bremsen mit Bremswiderstand bei drei Rampenzeiten}
 \label{fig:gen}
 \end{figure}
@@ -645,12 +646,18 @@ decken die Verluste in Motor und Umrichter sowie die Reibung. Der Läufer selbst
 speichert ebenfalls Energie, die hier nicht berücksichtigt ist.
 
 \subsection{Bremsmomente}
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
-\includegraphics[width=0.75\textwidth]{b_moment}
+\includegraphics[width=0.8\textwidth]{b_moment}
 \caption{Bremsmoment aus der gemessenen Drehzahländerung ($J_\mathrm{Alu}=\SI{\WJAlu}{kg.m^2}$),
 oben: Federkraft- und DC-Bremse, unten: generatorisches Bremsen}
 \label{fig:b_moment}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{b_moment_zoom}
+\caption{Bremsmomente der drei schnellsten Verfahren im Vergleich}
+\label{fig:b_moment_zoom}
 \end{figure}
 Die Verläufe zeigen die Eigenschaften der Verfahren deutlich: Federkraftbremse und
 generatorisches Bremsen mit Rampe haben ein nahezu konstantes Moment. Bei der DC-Bremse steigt
