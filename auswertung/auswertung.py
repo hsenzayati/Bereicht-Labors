@@ -107,21 +107,16 @@ for lbl, t, n in [("D", t_D, n_D), ("Y", t_Y, n_Y)]:
     for ng in (1400, 1450, 1480):
         merke(f"tH{lbl}{ {1400:'A',1450:'B',1480:'C'}[ng] }", float(np.interp(ng, n, t)), 2)
 
-# Tabelle mit Zwischenschritten (alle 50 1/min wie in der Anleitung)
-tab = []
-for i in range(len(n_k) - 1):
-    if n_k[i + 1] > 1480:
-        break
-    dn = (n_k[i + 1] - n_k[i]) / 60
-    Mm = 0.5 * (M400[i] + M400[i + 1]) - M_reib
-    tab.append((n_k[i], n_k[i + 1], Mm, Mm / 3,
-                2 * np.pi * J_vorb * dn / Mm, 2 * np.pi * J_vorb * dn / (Mm / 3)))
-tab = np.array(tab)
-tD_cum, tY_cum = np.cumsum(tab[:, 4]), np.cumsum(tab[:, 5])
+# Tabelle mit Zwischenschritten: Rechnung im 10-1/min-Raster, Ausgabe in 100-1/min-Schritten
+grenzen = list(range(0, 1401, 100)) + [1450, 1480]
 with open(ROOT / "bericht" / "tabelle_hochlauf.tex", "w") as f:
-    for r, a, b in zip(tab, tD_cum, tY_cum):
-        f.write(f"{r[0]:.0f} -- {r[1]:.0f} & {de(r[2],1)} & {de(r[3],1)} & "
-                f"{de(r[4]*1000,1)} & {de(a,3)} & {de(r[5]*1000,1)} & {de(b,3)}\\\\\n")
+    for a_, b_ in zip(grenzen[:-1], grenzen[1:]):
+        nn = np.arange(a_, b_ + 0.1, 10.0)
+        Mm = np.mean(np.interp(nn, n_k, M400)) - M_reib
+        tDa, tDb = np.interp([a_, b_], n_D, t_D)
+        tYa, tYb = np.interp([a_, b_], n_Y, t_Y)
+        f.write(f"{a_} -- {b_} & {de(Mm,1)} & {de(Mm/3,1)} & {de((tDb-tDa)*1000,0)} & "
+                f"{de(tDb,2)} & {de((tYb-tYa)*1000,0)} & {de(tYb,2)}\\\\\n")
 
 fig, ax = plt.subplots(figsize=(6.2, 3.2))
 ax.plot(n_k, M400, "o-", ms=3, color=C[0], label="Drehmoment Motor bei 400 V (Dreieck)")
