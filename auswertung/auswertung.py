@@ -21,12 +21,17 @@ FIG.mkdir(parents=True, exist_ok=True)
 
 # ---------------------------------------------------------------- Stil
 plt.rcParams.update({
-    "font.family": "serif", "font.size": 9, "axes.grid": True,
-    "grid.alpha": 0.35, "axes.titlesize": 9, "legend.fontsize": 8,
-    "figure.dpi": 150, "savefig.bbox": "tight", "lines.linewidth": 1.2,
+    "font.family": "Carlito", "font.size": 9.5, "mathtext.default": "regular",
+    "axes.grid": True, "grid.color": "#D9D9D9", "grid.linewidth": 0.8,
+    "axes.edgecolor": "#BFBFBF", "axes.linewidth": 0.8,
+    "axes.spines.top": False, "axes.spines.right": False,
+    "xtick.color": "#595959", "ytick.color": "#595959", "axes.labelcolor": "#404040",
+    "legend.fontsize": 8.5, "legend.frameon": True, "legend.fancybox": False,
+    "legend.edgecolor": "#BFBFBF", "legend.framealpha": 1,
+    "figure.dpi": 150, "savefig.bbox": "tight", "lines.linewidth": 1.6,
 })
 KOMMA = FuncFormatter(lambda x, p: f"{x:g}".replace(".", ","))
-C = ["#1f5fa8", "#d1495b", "#2a9d8f", "#e9a03b", "#6c4ab6", "#555555"]
+C = ["#4472C4", "#ED7D31", "#A5A5A5", "#FFC000", "#5B9BD5", "#70AD47", "#264478", "#9E480E"]   # Excel-Farben
 
 
 def komma(ax):
@@ -119,22 +124,17 @@ with open(ROOT / "bericht" / "tabelle_hochlauf.tex", "w") as f:
                 f"{de(r[4]*1000,1)} & {de(a,3)} & {de(r[5]*1000,1)} & {de(b,3)}\\\\\n")
 
 fig, ax = plt.subplots(figsize=(6.2, 3.2))
-ax.plot(n_k, M400, "o-", ms=3, color=C[0], label=r"$M_{400\,\mathrm{V}}$ (Dreieck, Herstellerkennlinie)")
-ax.plot(n_k, M230, "s-", ms=3, color=C[1], label=r"$M_{230\,\mathrm{V}} = M_{400\,\mathrm{V}}/3$ (Stern)")
-ax.axhline(M_reib, color=C[5], ls="--", label=r"Lastmoment $M_\mathrm{Reib}\approx 0{,}02$ Nm")
-ax.set_xlabel(r"Drehzahl $n$ in min$^{-1}$"); ax.set_ylabel(r"Moment $M$ in Nm")
+ax.plot(n_k, M400, "o-", ms=3, color=C[0], label="Drehmoment Motor bei 400 V (Dreieck)")
+ax.plot(n_k, M230, "s-", ms=3, color=C[1], label="Drehmoment Motor bei 230 V (Stern)")
+ax.axhline(M_reib, color=C[2], label="Lastmoment (Reibung 0,02 Nm)")
+ax.set_xlabel("Drehzahl [1/min]"); ax.set_ylabel("Drehmoment [Nm]")
 ax.set_xlim(0, 1550); ax.set_ylim(0, 60); ax.legend(); komma(ax)
 speichern(fig, "v_kennlinie")
 
 fig, ax = plt.subplots(figsize=(6.2, 3.2))
-ax.plot(t_D, n_D, color=C[0], label="Dreieck (400 V am Strang)")
-ax.plot(t_Y, n_Y, color=C[1], label="Stern (230 V am Strang)")
-for t, n, c in [(t_D, n_D, C[0]), (t_Y, n_Y, C[1])]:
-    tt = np.interp(1450, n, t)
-    ax.plot(tt, 1450, "o", color=c)
-    ax.annotate(f"{tt:.2f} s".replace(".", ","), (tt, 1450), (tt - 0.5, 1150),
-                arrowprops=dict(arrowstyle="->", color=c), color=c)
-ax.set_xlabel(r"Zeit $t$ in s"); ax.set_ylabel(r"Drehzahl $n$ in min$^{-1}$")
+ax.plot(t_D, n_D, color=C[0], label="Hochlauf Dreieck (400 V)")
+ax.plot(t_Y, n_Y, color=C[1], label="Hochlauf Stern (230 V)")
+ax.set_xlabel("Zeit [s]"); ax.set_ylabel("Drehzahl [1/min]")
 ax.set_xlim(0, 4.2); ax.set_ylim(0, 1600); ax.legend(loc="lower right"); komma(ax)
 speichern(fig, "v_hochlauf")
 
@@ -214,17 +214,17 @@ def anlaufplot(key, xmax):
     d = anl[key]
     fig, axs = plt.subplots(4, 1, figsize=(6.2, 6.6), sharex=True)
     axs[0].plot(d["t"], d["n"], color=C[0])
-    axs[0].set_ylabel(r"$n$ in min$^{-1}$")
+    axs[0].set_ylabel("Drehzahl [1/min]")
     axs[1].plot(d["t"], d["I"], color=C[1])
-    axs[1].set_ylabel(r"$I_\mathrm{eff}$ in A")
-    axs[2].plot(d["t"], d["U"], color=C[2])
-    axs[2].set_ylabel(r"$U_\mathrm{eff}$ in V")
+    axs[1].set_ylabel("Strom [A]")
+    axs[2].plot(d["t"], d["U"], color=C[5])
+    axs[2].set_ylabel("Spannung [V]")
     lo = min(d["U1"], d.get("U2", 1e9)) - 6
     axs[2].set_ylim(lo, d["U0"] + 4)
-    axs[3].plot(d["t"], d["P"] / 1000, color=C[3], label="Wirkleistung $P$ in kW")
-    axs[3].plot(d["t"], d["Q"] / 1000, color=C[4], label="Blindleistung $Q$ in kvar")
-    axs[3].set_ylabel("$P$, $Q$"); axs[3].legend(loc="upper right")
-    axs[3].set_xlabel(r"Zeit $t$ in s (ab Einschalten)")
+    axs[3].plot(d["t"], d["P"] / 1000, color=C[3], label="Wirkleistung [kW]")
+    axs[3].plot(d["t"], d["Q"] / 1000, color=C[4], label="Blindleistung [kvar]")
+    axs[3].set_ylabel("Leistung"); axs[3].legend(loc="upper right")
+    axs[3].set_xlabel("Zeit [s]")
     for ax in axs:
         komma(ax)
         if "t_um" in d:
@@ -243,11 +243,11 @@ fig, ax = plt.subplots(figsize=(6.2, 3.4))
 for (key, c) in zip(anl, C):
     d = anl[key]
     ax.plot(d["t"], d["n"], color=c, label=d["titel"])
-ax.plot(t_D, n_D, "k--", lw=1, label="Rechnung Dreieck")
-ax.plot(t_Y, n_Y, "k:", lw=1.3, label="Rechnung Stern")
+ax.plot(t_D, n_D, color=C[6], ls="--", label="Rechnung Dreieck")
+ax.plot(t_Y, n_Y, color=C[7], ls="--", label="Rechnung Stern")
 ax.set_xlim(-0.1, 4.8); ax.set_ylim(-20, 1600)
-ax.set_xlabel(r"Zeit $t$ in s"); ax.set_ylabel(r"Drehzahl $n$ in min$^{-1}$")
-ax.legend(loc="lower right", fontsize=7); komma(ax)
+ax.set_xlabel("Zeit [s]"); ax.set_ylabel("Drehzahl [1/min]")
+ax.legend(loc="lower right", fontsize=7.5); komma(ax)
 speichern(fig, "a_vergleich_n")
 
 fig, ax = plt.subplots(figsize=(6.2, 3.0))
@@ -255,24 +255,24 @@ for (key, c) in zip(anl, C):
     d = anl[key]
     ax.plot(d["t"], d["I"], color=c, label=d["titel"])
 ax.set_xlim(-0.1, 4.8)
-ax.set_xlabel(r"Zeit $t$ in s"); ax.set_ylabel(r"$I_\mathrm{eff}$ in A")
+ax.set_xlabel("Zeit [s]"); ax.set_ylabel("Strom [A]")
 ax.legend(loc="upper right", fontsize=7); komma(ax)
 speichern(fig, "a_vergleich_I")
 
 # Beschleunigungsmoment
 fig, axs = plt.subplots(1, 2, figsize=(6.4, 3.0))
-for key, c in [("direkt", C[0]), ("richtig", C[2])]:
+for key, c in [("direkt", C[0]), ("richtig", C[1])]:
     d = anl[key]
     m = (d["t"] > 0.03) & (d["I"] > 0.5)
-    axs[0].plot(d["t"][m], d["MB"][m], ".", ms=2, color=c, label=d["titel"])
-    axs[1].plot(d["ns"][m], d["MB"][m], ".", ms=2, color=c)
-axs[1].plot(n_k, M400, "k--", lw=1, label=r"$M_{400\,\mathrm{V}}$ Kennlinie")
-axs[1].plot(n_k, M230, "k:", lw=1.3, label=r"$M_{230\,\mathrm{V}}$ Kennlinie")
-axs[0].set_xlabel(r"Zeit $t$ in s"); axs[0].set_ylabel(r"$M_\mathrm{B}$ in Nm")
-axs[1].set_xlabel(r"Drehzahl $n$ in min$^{-1}$")
+    axs[0].plot(d["t"][m], d["MB"][m], color=c, label=d["titel"])
+    axs[1].plot(d["ns"][m], d["MB"][m], color=c)
+axs[1].plot(n_k, M400, color=C[6], ls="--", label="Kennlinie 400 V")
+axs[1].plot(n_k, M230, color=C[7], ls="--", label="Kennlinie 230 V")
+axs[0].set_xlabel("Zeit [s]"); axs[0].set_ylabel("Beschleunigungsmoment [Nm]")
+axs[1].set_xlabel("Drehzahl [1/min]")
 axs[0].set_xlim(0, 4.5); axs[0].set_ylim(-10, 90); axs[1].set_ylim(-10, 90)
 axs[1].set_xlim(0, 1550)
-axs[0].legend(fontsize=7, loc="upper right", markerscale=4); axs[1].legend(fontsize=7)
+axs[0].legend(fontsize=7, loc="upper right"); axs[1].legend(fontsize=7)
 for ax in axs:
     komma(ax)
 speichern(fig, "a_moment")
@@ -286,10 +286,10 @@ BR = {
     "dcl": ("DC_Bremse_Langsam.csv", "DC-Bremse, kleiner Strom"),
     "dcm": ("DC_Bremse_Mittel.csv", "DC-Bremse, mittlerer Strom"),
     "dcs": ("DC_Bremse_Schnell.csv", "DC-Bremse, großer Strom"),
-    "genohne": ("Generatorische_Bremse_ohne_Bremswiderstand.csv", "Generatorisch ohne $R_\\mathrm{B}$"),
-    "genl": ("Generatorische_Bremse_Langsam.csv", "Generatorisch mit $R_\\mathrm{B}$, langsam"),
-    "genm": ("Generatorische_Bremse_Mittel.csv", "Generatorisch mit $R_\\mathrm{B}$, mittel"),
-    "gens": ("Generatorische_Bremse_Schnell.csv", "Generatorisch mit $R_\\mathrm{B}$, schnell"),
+    "genohne": ("Generatorische_Bremse_ohne_Bremswiderstand.csv", "Generatorisch ohne Bremswiderstand"),
+    "genl": ("Generatorische_Bremse_Langsam.csv", "Generatorisch mit Bremswiderstand, langsam"),
+    "genm": ("Generatorische_Bremse_Mittel.csv", "Generatorisch mit Bremswiderstand, mittel"),
+    "gens": ("Generatorische_Bremse_Schnell.csv", "Generatorisch mit Bremswiderstand, schnell"),
 }
 br = {}
 E_kin = 0.5 * J_alu * (2 * np.pi * 1800 / 60) ** 2
@@ -354,20 +354,18 @@ merke("gensErbAnteil", float(br["gens"]["Erb"] / E_kin * 100), 0)
 with open(ROOT / "bericht" / "tabelle_bremsen.tex", "w") as f:
     for key in ["feder", "dcl", "dcm", "dcs", "genohne", "genl", "genm", "gens"]:
         d = br[key]
-        tit = d["titel"].replace("Generatorisch", "Generat.")
+        tit = d["titel"].replace("Generatorisch", "Generat.").replace("Bremswiderstand", "$R_\\mathrm{B}$")
         f.write(f"{tit} & {de(d['tB'],2)} & {de((d['n0'])/d['tB'],0)} & "
                 f"{de(d['Mmit'],1)} & {de(d['Mmax'],1)} & {de(d['Uzkmax'],0)} & "
                 f"{de(d['Erb'],0) if d['Erb']>0 else '--'}\\\\\n")
 
 # Drehzahlverlaeufe aller Verfahren
 fig, ax = plt.subplots(figsize=(6.2, 3.6))
-for key, c, ls in [("feder", C[5], "-"), ("dcl", C[1], ":"), ("dcm", C[1], "--"),
-                   ("dcs", C[1], "-"), ("genohne", C[4], "-"), ("genl", C[0], ":"),
-                   ("genm", C[0], "--"), ("gens", C[0], "-")]:
+for key, c in zip(["feder", "dcl", "dcm", "dcs", "genohne", "genl", "genm", "gens"], C):
     d = br[key]
-    ax.plot(d["t"], d["n"], color=c, ls=ls, label=d["titel"])
+    ax.plot(d["t"], d["n"], color=c, label=d["titel"])
 ax.set_xlim(-0.1, 10.5); ax.set_ylim(-60, 1900)
-ax.set_xlabel(r"Zeit $t$ in s (ab Bremsbefehl)"); ax.set_ylabel(r"Drehzahl $n$ in min$^{-1}$")
+ax.set_xlabel("Zeit [s]"); ax.set_ylabel("Drehzahl [1/min]")
 ax.legend(fontsize=7, loc="upper right"); komma(ax)
 speichern(fig, "b_vergleich_n")
 
@@ -377,22 +375,22 @@ for key, c in [("feder", C[0]), ("federnull", C[1])]:
     d = br[key]
     axs[0].plot(d["t"], d["n"], color=c, label=d["titel"])
     axs[1].plot(d["t"], d["U"], color=c)
-axs[0].set_ylabel(r"$n$ in min$^{-1}$"); axs[0].legend()
-axs[1].set_ylabel(r"$U_\mathrm{eff}$ in V"); axs[1].set_xlabel(r"Zeit $t$ in s")
+axs[0].set_ylabel("Drehzahl [1/min]"); axs[0].legend()
+axs[1].set_ylabel("Spannung [V]"); axs[1].set_xlabel("Zeit [s]")
 for ax in axs:
     komma(ax)
 speichern(fig, "b_feder")
 
 # DC-Bremse
 fig, axs = plt.subplots(3, 1, figsize=(6.2, 5.4), sharex=True)
-for key, c in [("dcl", C[0]), ("dcm", C[2]), ("dcs", C[1])]:
+for key, c in [("dcl", C[0]), ("dcm", C[3]), ("dcs", C[1])]:
     d = br[key]
     axs[0].plot(d["t"], d["n"], color=c, label=d["titel"])
     axs[1].plot(d["t"], d["Idc"], color=c)
     axs[2].plot(d["t"], d["U"], color=c)
-axs[0].set_ylabel(r"$n$ in min$^{-1}$"); axs[0].legend(fontsize=7)
-axs[1].set_ylabel(r"$\max|I_{k,\mathrm{DC}}|$ in A")
-axs[2].set_ylabel(r"$U_\mathrm{eff}$ in V"); axs[2].set_xlabel(r"Zeit $t$ in s")
+axs[0].set_ylabel("Drehzahl [1/min]"); axs[0].legend(fontsize=7.5)
+axs[1].set_ylabel("Gleichstrom [A]")
+axs[2].set_ylabel("Spannung [V]"); axs[2].set_xlabel("Zeit [s]")
 axs[0].set_xlim(-0.1, 6.3)
 for ax in axs:
     komma(ax)
@@ -401,39 +399,39 @@ speichern(fig, "b_dc")
 # Generatorisch ohne Bremswiderstand
 d = br["genohne"]
 fig, axs = plt.subplots(3, 1, figsize=(6.2, 5.0), sharex=True)
-axs[0].plot(d["t"], d["n"], color=C[0]); axs[0].set_ylabel(r"$n$ in min$^{-1}$")
-axs[1].plot(d["t"], d["Uzk"], color=C[1]); axs[1].set_ylabel(r"$U_\mathrm{ZK}$ in V")
-axs[2].plot(d["t"], d["I"], color=C[2]); axs[2].set_ylabel(r"$I_\mathrm{eff}$ in A")
-axs[2].set_xlabel(r"Zeit $t$ in s")
+axs[0].plot(d["t"], d["n"], color=C[0]); axs[0].set_ylabel("Drehzahl [1/min]")
+axs[1].plot(d["t"], d["Uzk"], color=C[1]); axs[1].set_ylabel("Zwischenkreisspannung [V]")
+axs[2].plot(d["t"], d["I"], color=C[5]); axs[2].set_ylabel("Strom [A]")
+axs[2].set_xlabel("Zeit [s]")
 for ax in axs:
     komma(ax)
 speichern(fig, "b_gen0")
 
 # Generatorisch mit Bremswiderstand
 fig, axs = plt.subplots(3, 1, figsize=(6.2, 5.4), sharex=True)
-for key, c in [("genl", C[0]), ("genm", C[2]), ("gens", C[1])]:
+for key, c in [("genl", C[0]), ("genm", C[3]), ("gens", C[1])]:
     d = br[key]
     axs[0].plot(d["t"], d["n"], color=c, label=d["titel"])
     axs[1].plot(d["t"], d["Uzk"], color=c)
     axs[2].plot(d["t"], d["Prb"] / 1000, color=c)
-axs[0].set_ylabel(r"$n$ in min$^{-1}$"); axs[0].legend(fontsize=7)
-axs[1].set_ylabel(r"$U_\mathrm{ZK}$ in V")
-axs[2].set_ylabel(r"$P_\mathrm{RB}$ in kW"); axs[2].set_xlabel(r"Zeit $t$ in s")
+axs[0].set_ylabel("Drehzahl [1/min]"); axs[0].legend(fontsize=7.5)
+axs[1].set_ylabel("Zwischenkreisspannung [V]")
+axs[2].set_ylabel("Leistung Bremswiderstand [kW]"); axs[2].set_xlabel("Zeit [s]")
 for ax in axs:
     komma(ax)
 speichern(fig, "b_gen")
 
 # Bremsmomente
 fig, axs = plt.subplots(2, 1, figsize=(6.2, 5.0), sharex=True)
-for key, c in [("feder", C[5]), ("dcl", C[0]), ("dcm", C[2]), ("dcs", C[1])]:
+for key, c in [("feder", C[5]), ("dcl", C[0]), ("dcm", C[3]), ("dcs", C[1])]:
     d = br[key]; m = (d["t"] > -0.05) & (d["t"] < d["tB"] + 0.02)
     axs[0].plot(d["t"][m], d["M"][m], color=c, label=d["titel"])
-for key, c in [("genohne", C[4]), ("genl", C[0]), ("genm", C[2]), ("gens", C[1])]:
+for key, c in [("genohne", C[2]), ("genl", C[0]), ("genm", C[3]), ("gens", C[1])]:
     d = br[key]; m = (d["t"] > -0.05) & (d["t"] < d["tB"] + 0.02)
     axs[1].plot(d["t"][m], d["M"][m], color=c, label=d["titel"])
 for ax in axs:
-    ax.set_ylabel(r"$M_\mathrm{Br}$ in Nm"); ax.legend(fontsize=7, loc="upper right"); komma(ax)
-axs[1].set_xlabel(r"Zeit $t$ in s (ab Bremsbefehl)")
+    ax.set_ylabel("Bremsmoment [Nm]"); ax.legend(fontsize=7.5, loc="upper right"); komma(ax)
+axs[1].set_xlabel("Zeit [s]")
 axs[0].set_xlim(-0.1, 10.3)
 speichern(fig, "b_moment")
 
@@ -442,7 +440,7 @@ fig, ax = plt.subplots(figsize=(6.2, 2.8))
 for key, c in [("feder", C[5]), ("dcs", C[1]), ("gens", C[0])]:
     d = br[key]; m = (d["t"] > -0.05) & (d["t"] < d["tB"] + 0.02)
     ax.plot(d["t"][m], d["M"][m], color=c, label=d["titel"])
-ax.set_xlim(-0.05, 2.0); ax.set_xlabel(r"Zeit $t$ in s"); ax.set_ylabel(r"$M_\mathrm{Br}$ in Nm")
+ax.set_xlim(-0.05, 2.0); ax.set_xlabel("Zeit [s]"); ax.set_ylabel("Bremsmoment [Nm]")
 ax.legend(fontsize=7); komma(ax)
 speichern(fig, "b_moment_zoom")
 
