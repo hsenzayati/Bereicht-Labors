@@ -19,5 +19,6 @@ cd ../bericht && pdflatex bericht.tex && pdflatex bericht.tex
 cd ../erklaerung && pdflatex erklaerung_de.tex && pdflatex erklaerung_fr.tex
 xelatex erklaerung_ar.tex   # Arabisch: xelatex + polyglossia + Schrift Amiri
 cd ../word && node erzeuge_word.js   # Word-Version (Bilder in word/bilder/)
+python3 toc_aktualisieren.py "$PWD/bericht.docx" "$PWD/bericht.docx"   # Inhaltsverzeichnis mit Seitenzahlen füllen
 ```
 Nicht verwendet (gehören nicht zu V9): `F_Kennline_*.csv`, `Messung_f87Hz_*.csv`.

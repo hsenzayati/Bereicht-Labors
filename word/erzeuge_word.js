@@ -248,7 +248,7 @@ add(
     ["Schaltung", "bis 1400 min^{−1}", "bis 1450 min^{−1}", "bis 1480 min^{−1}"],
     [["Dreieck (400 V)", `${W.tHDA} s`, `${W.tHDB} s`, `${W.tHDC} s`], ["Stern (230 V)", `${W.tHYA} s`, `${W.tHYB} s`, `${W.tHYC} s`]],
     [2770, 2100, 2100, 2100]),
-  P("Im Stern ist das Moment auf ein Drittel reduziert. Die Hochlaufzeit verlängert sich deshalb genau um den Faktor drei. **Umschaltzeitpunkt:** Die Maschine sollte im Stern bis knapp unter die Nenndrehzahl hochlaufen. Nach der Rechnung ist das nach etwa 3,6 … 3,9 s der Fall (1400 … 1450 min^{−1})."),
+  P("Im Stern ist das Moment auf ein Drittel reduziert. Die Hochlaufzeit verlängert sich deshalb um etwa den Faktor drei (genauer: (400/230)² ≈ 3,02). **Umschaltzeitpunkt:** Die Maschine sollte im Stern bis knapp unter die Nenndrehzahl hochlaufen. Nach der Rechnung ist das nach etwa 3,6 … 3,9 s der Fall (1400 … 1450 min^{−1})."),
 );
 
 // ---------------- 5 Anlauf
@@ -375,9 +375,9 @@ add(
   LI("Bremswiderstand und Motor können sich bei häufigem Bremsen stark erwärmen (Verbrennungsgefahr)."),
   H1("Quellen"),
   NUM("Ostfalia Hochschule, Labor für elektrische Antriebe: Versuchsanleitung V9 „Anlauf- und Bremsverfahren“, Version 0.9, 08.10.2026.", "quellen"),
-  NUM("Siemens AG: Aufbau Federkraftbremse, Bilddatenbank, https://www.automation.siemens.com/bilddb, Abruf 24.09.2024.", "quellen"),
-  NUM("Lenze SE: Produktinformation Gleichstrombremsung, https://www.lenze.com, Abruf 24.09.2024.", "quellen"),
-  NUM("K.-D. Tieste: Skript „Elektrische Antriebe“, Ostfalia Hochschule, WS 2024/25.", "quellen"),
+  NUM("Siemens AG: Aufbau Federkraftbremse, Bilddatenbank, https://www.automation.siemens.com/bilddb (zitiert nach [1]).", "quellen"),
+  NUM("Lenze SE: Produktinformation Gleichstrombremsung, https://www.lenze.com (zitiert nach [1]).", "quellen"),
+  NUM("K.-D. Tieste: Skript „Elektrische Antriebe“, Ostfalia Hochschule, WS 2024/25 (zitiert nach [1]).", "quellen"),
 );
 
 // ================================================================== Dokument
